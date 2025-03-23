@@ -1,75 +1,52 @@
 #include <bits/stdc++.h>
 using namespace std;
-int t, n;
 
-bool check(vector<int> &numList, vector<char> &operList) {
-    vector<int> numTemp;
-    vector<int> operTemp;
-    int sum = 0;
+int n;
 
-    numTemp.push_back(numList[0]);
-    for(int i = 0; i < operList.size(); i++) {
-        if(operList[i] == ' ') {
-            int tmp = numTemp[numTemp.size() - 1];
-            numTemp.pop_back();
-            numTemp.push_back(tmp*10 + numList[i + 1]);
-        }
-        else {
-            operTemp.push_back(operList[i]);
-            numTemp.push_back(numList[i + 1]);
+// 수식을 계산하는 함수 (수식 결과가 0인지 확인)
+bool evaluate(const string& expr) {
+    int sum = 0, num = 0;
+    char op = '+';
+
+    for (char c : expr) {
+        if (isdigit(c)) {
+            num = num * 10 + (c - '0'); // 숫자 조합
+        } else if (c == '+' || c == '-') {
+            sum += (op == '+') ? num : -num; // 이전 연산을 수행
+            op = c; // 연산자 변경
+            num = 0; // 숫자 초기화
         }
     }
+    sum += (op == '+') ? num : -num; // 마지막 수 처리
 
-    sum += numTemp[0];
-    for(int i = 0; i < operTemp.size(); i++) {
-        if(operTemp[i] == '+') sum += numTemp[i + 1];
-        else if(operTemp[i] == '-') sum -= numTemp[i + 1];
-    }
-    return sum == 0 ? true : false;
+    return sum == 0;
 }
 
-void print(vector<int> &numList, vector<char> &operList) {
-    for(int i = 0; i < numList.size() - 1; i++) {
-        cout << numList[i] << operList[i];
-    }
-    cout << numList[numList.size() - 1] << "\n";
-    return;
-}
-
-void dfs(int cnt, vector<int> &numList, vector<char> &operList) {
-    if(cnt == n - 1) {
-        numList.push_back(n);
-        if(check(numList, operList)) {
-            print(numList, operList);
-        }
-        numList.pop_back();
+// DFS로 수식 조합을 생성하는 함수
+void dfs(int num, string expr) {
+    if (num == n) { // 수식이 끝나면 계산 후 출력
+        if (evaluate(expr)) cout << expr << "\n";
         return;
     }
-    numList.push_back(cnt + 1);
 
-    operList.push_back(' ');
-    dfs(cnt + 1, numList, operList);
-    operList.pop_back();
-    operList.push_back('+');
-    dfs(cnt + 1, numList, operList);
-    operList.pop_back();
-    operList.push_back('-');
-    dfs(cnt + 1, numList, operList);
-    operList.pop_back();
-
-    numList.pop_back();
-    return;
+    // 숫자 추가, 덧셈, 뺄셈 세 가지 경우를 DFS로 탐색
+    dfs(num + 1, expr + " " + to_string(num + 1));
+    dfs(num + 1, expr + "+" + to_string(num + 1));
+    dfs(num + 1, expr + "-" + to_string(num + 1));
 }
+
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
-    cin >> t;
-    while(t--) {
-        cin >> n;
-        vector<int> numList;
-        vector<char> operList;
-        dfs(0, numList, operList);
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int t;
+    cin >> t; // 테스트 케이스 수 입력
+
+    while (t--) {
+        cin >> n; // n 값 입력
+        dfs(1, "1"); // 첫 번째 숫자 1부터 시작
         cout << "\n";
     }
+
     return 0;
 }
