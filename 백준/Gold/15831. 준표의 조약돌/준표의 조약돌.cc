@@ -13,31 +13,17 @@ int main() {
         cin >> a[i];
     }
     
-    if(a[0] == 'W') wSum++;
-    else bSum++;
+    for(r = 0; r < n; r++) {
+        if(a[r] == 'W') wSum++;
+        else bSum++;
 
-    while(l <= r && r < n) {
-        int tmpW = wSum, tmpB = bSum;
-        if(wSum >= w && bSum <= b) {
-            ret = max(ret, (r - l + 1));
-            r++;
-            if(a[r] == 'W') wSum++;
-            else bSum++;
-            continue;
-        }
-
-        if(wSum < w) {
-            r++;
-            if(a[r] == 'W') tmpW++;
-            else tmpB++;
-        }
-
-        if(bSum > b) {
-            if(a[l] == 'W') tmpW--;
-            else tmpB--;
+        while(bSum > b && l <= r) {
+            if(a[l] == 'W') wSum--;
+            else bSum--;
             l++;
         }
-        wSum = tmpW; bSum = tmpB;
+
+        if(wSum >= w) ret = max(ret, r - l + 1);
     }
 
     cout << ret << "\n";
