@@ -1,98 +1,85 @@
 #include <bits/stdc++.h>
 using namespace std;
+int n, m, d, a[20][20], temp[20][20], ret;
+vector<pair<int, int>> enemyList, tempList;
 
-int n, m, d, boardOrig[20][20];
-int ans = 0;
+// 1. 궁수가 적을 죽인다.
+// 2. 적이 움직인다.
 
-int simulate(int a1, int a2, int a3) {
-    int board[20][20];
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < m; j++)
-            board[i][j] = boardOrig[i][j];
-    
-    int killCount = 0;
-    while (true) {
-        // 남은 적이 있는지 확인
-        bool exist = false;
-        for (int i = 0; i < n; i++){
-            for (int j = 0; j < m; j++){
-                if(board[i][j] == 1){
-                    exist = true;
-                    break;
-                }
+int go(int x) {
+    pair<int, int> _ret = {-1, m};
+    int _dist = d;
+    for(int i = 0; i < tempList.size(); i++) {
+        pair<int, int> enemy = tempList[i];
+        int dist = abs(enemy.first - n) + abs(enemy.second - x);
+        if(dist <= d) {
+            if(dist < _dist || (dist == _dist && enemy.second < _ret.second)) {
+                _ret = enemy;
+                _dist = dist;
             }
-            if(exist) break;
         }
-        if(!exist) break;
-        
-        set<pair<int,int>> targets;
-        vector<int> archers = {a1, a2, a3};
-        for (int ac : archers) {
-            int bestDist = 1e9, targetRow = -1, targetCol = -1;
-            for (int i = 0; i < n; i++){
-                for (int j = 0; j < m; j++){
-                    if(board[i][j] == 1){
-                        int dist = abs(n - i) + abs(ac - j);
-                        if(dist <= d){
-                            if(dist < bestDist){
-                                bestDist = dist;
-                                targetRow = i;
-                                targetCol = j;
-                            } else if(dist == bestDist){
-                                if(j < targetCol){ 
-                                    targetRow = i;
-                                    targetCol = j;
+    }
+
+    // 아무도 못 죽이면 0 반환
+    if(_ret.first == -1 && _ret.second == m) return 0;
+    // 죽이면 1 반환
+    if(temp[_ret.first][_ret.second]) {
+        temp[_ret.first][_ret.second] = 0;
+        return 1;
+    } 
+    // 이미 다른 궁수가 죽였으면 0 반환
+    return 0;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+    cin >> n >> m >> d;
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < m; j++) {
+            cin >> a[i][j];
+            if(a[i][j] == 1) {
+                enemyList.push_back({i, j});
+            }
+        }
+    }   
+
+    // 3명 궁수 배치
+    for(int i = 0; i < m; i++) {
+        for(int j = i + 1; j < m; j++) {
+            for(int k = j + 1; k < m; k++) {
+                int sum = 0;
+                memcpy(&temp, &a, sizeof(a));
+                tempList = enemyList;
+                while(true) {
+                    if(tempList.empty()) break;
+                    // (n, i), (n, j), (n, k)
+                    // 죽이기
+                    sum += (go(i) + go(j) + go(k));
+                    
+                    // 적 이동하기
+                    tempList.clear();
+                    for(int j = 0; j < m; j++) {
+                        for(int i = n - 1; i >= 0; i--) {
+                            if(temp[i][j] == 1) {
+                                if(i == (n - 1)) {
+                                    temp[i][j] = 0;
+                                }
+                                else {
+                                    temp[i + 1][j] = 1;
+                                    temp[i][j] = 0;
+                                    tempList.push_back({(i + 1), j});
                                 }
                             }
                         }
                     }
-                }
+                }   
+                ret = max(ret, sum);
             }
-            if(targetRow != -1)
-                targets.insert({targetRow, targetCol});
-        }
-        
-        for (auto pos : targets) {
-            int r = pos.first, c = pos.second;
-            if(board[r][c] == 1) {
-                board[r][c] = 0;
-                killCount++;
-            }
-        }
-        
-        for (int i = n - 1; i >= 1; i--){
-            for (int j = 0; j < m; j++){
-                board[i][j] = board[i-1][j];
-            }
-        }
-        for (int j = 0; j < m; j++){
-            board[0][j] = 0;
         }
     }
-    
-    return killCount;
-}
 
-int main(){
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    
-    cin >> n >> m >> d;
-    for (int i = 0; i < n; i++){
-        for (int j = 0; j < m; j++){
-            cin >> boardOrig[i][j];
-        }
-    }
-    
-    for (int i = 0; i < m; i++){
-        for (int j = i + 1; j < m; j++){
-            for (int k = j + 1; k < m; k++){
-                int kills = simulate(i, j, k);
-                ans = max(ans, kills);
-            }
-        }
-    }
-    
-    cout << ans << "\n";
+    cout << ret << "\n";
+
     return 0;
 }
