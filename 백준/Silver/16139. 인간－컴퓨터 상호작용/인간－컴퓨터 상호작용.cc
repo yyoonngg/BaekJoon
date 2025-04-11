@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-int q, l, r, psum[2004][30];
+int q, l, r, psum[200004][30];
 char a;
 string s;
 
