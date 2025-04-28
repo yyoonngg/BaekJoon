@@ -12,16 +12,13 @@ int main() {
     for(int i = 0; i < n; i++) {
         for(int j = i + 1; j < n; j++) {
             if(sum - v[i] - v[j] == 100) {
-                ret1 = i;
-                ret2 = j;
-                break;
+                for(int k = 0; k < n; k++) {
+                    if(k == i || k == j) continue;
+                    cout << v[k] << "\n";
+                }
+                return 0;
             }
         }
-        if(ret1 != -1) break; 
-    }
-    for(int i = 0; i < n; i++) {
-        if(i == ret1 || i == ret2) continue;
-        cout << v[i] << "\n";
     }
     return 0;
 }
