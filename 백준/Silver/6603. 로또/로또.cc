@@ -1,49 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
-vector<int> v;
+vector<int> v, picked;
 
-void go(int cnt, int sum, int num) {
-    if(cnt > (int)v.size()) return;
-    if(num == 6) {
-        int _cnt = 0;
-        for(int i = 0; i < (1 << cnt); i++) {
-            if(sum & (1 << i)) {
-                cout << v[i] << " ";
-                _cnt++;
-            }
-            if(_cnt == 6) break;
+void go(int idx) {
+    if(picked.size() == 6) {
+        for(int i = 0; i < 6; i++) {
+            cout << picked[i] << " ";
         }
         cout << "\n";
         return;
     }
+    if(idx == v.size()) return;
+    
+    picked.push_back(v[idx]);
+    go(idx + 1);
+    picked.pop_back();
 
-    go(cnt + 1, sum | (1 << cnt), num + 1);
-    go(cnt + 1, sum, num);
+    go(idx + 1);
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     
     while(true) {
-        string s;
-        getline(cin, s);
-        if(s == "0") break;
-    
-        v.clear();
-        string temp = "";
-        for(int i = 2; i < (int)s.size(); i++) {
-            if(s[i] != ' ') {
-                temp += s[i];
-            }
-            else if(temp != ""){
-                v.push_back(atoi(temp.c_str()));
-                temp = "";
-            }
-        }
-        if(temp != "") v.push_back(atoi(temp.c_str()));
+        int k;
+        cin >> k;
+        if(k == 0) break;
 
-        go(1, 1, 1); // 0 & (1 << 0)
-        go(1, 0, 0);
+        v.resize(k);
+        for(int i = 0; i < k; i++) {
+            cin >> v[i];
+        }
+
+        picked.clear();
+        go(0);
         cout << "\n";
     }
     return 0;
