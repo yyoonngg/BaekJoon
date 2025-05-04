@@ -19,20 +19,10 @@ int main() {
         int d;
         cin >> d;
 
-        int left = 0, right = n - 1;
-        int ans = -1;
+        auto it = lower_bound(a.begin(), a.end(), d);
 
-        while(left <= right) {
-            int mid = (left + right) / 2;
-            if(a[mid] < d) {
-                left = mid + 1;
-            }
-            else {
-                right = mid - 1;
-            }
-        }
-        if(left < n && a[left] == d) {
-            cout << left << "\n";
+        if(it != a.end() && *it == d) {
+            cout << (it - a.begin()) << "\n";
         }
         else {
             cout << "-1\n";
