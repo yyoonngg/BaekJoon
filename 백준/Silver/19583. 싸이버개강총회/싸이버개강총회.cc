@@ -11,9 +11,7 @@ string time, name;
 unordered_set<string> unset;
 
 int change(string s) {
-    int ret = atoi(s.substr(0, 2).c_str()) * 60 + atoi(s.substr(3, 5).c_str());
-
-    return ret;
+    return atoi(s.substr(0, 2).c_str()) * 60 + atoi(s.substr(3, 5).c_str());
 }
 int main() {
     ios_base::sync_with_stdio(false);
