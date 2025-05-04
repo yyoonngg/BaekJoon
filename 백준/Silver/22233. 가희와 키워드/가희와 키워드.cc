@@ -1,39 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
+int n, m, ret;
+unordered_set<string> memo;
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-
-    int n, m;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
     cin >> n >> m;
+    
+    ret = n;
 
-    unordered_set<string> memo;
-    int ret = n;
-
-    for (int i = 0; i < n; i++) {
+    for(int i = 0; i < n; i++) {
         string word;
         cin >> word;
         memo.insert(word);
     }
 
-    for (int i = 0; i < m; i++) {
+    for(int i = 0; i < m; i++) {
         string line;
         cin >> line;
 
         string s;
-        for (char ch : line) {
-            if (ch == ',') {
-                if (memo.erase(s)) ret--; // 존재하면 삭제 및 카운트 감소
+        for(char ch: line) {
+            if(ch == ',') {
+                if(memo.erase(s)) ret--;
                 s.clear();
-            } else {
+            }
+            else {
                 s += ch;
             }
         }
-
-        if (!s.empty() && memo.erase(s)) ret--; // 마지막 키워드
+        if(!s.empty() && memo.erase(s)) ret--;
         cout << ret << "\n";
     }
-
     return 0;
 }
