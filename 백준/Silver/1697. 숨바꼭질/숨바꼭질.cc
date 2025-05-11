@@ -1,41 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
-int n, k, visited[100004];
+const int MAX = 100004;
+int n, k, dist[MAX];
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL); cout.tie(NULL);
     cin >> n >> k;
 
-    queue<int> q;
-    q.push(n);
-    int cnt = 0;
-    bool flag = true;
+    fill(dist, dist + MAX, -1);
+    deque<int> dq;
+    dq.push_back(n);
+    dist[n] = 0;
 
+    while(!dq.empty()) {
+        int curr = dq.front(); dq.pop_front();
 
-    while(flag) {
-        queue<int> temp_q;
+        if(curr == k) break;
 
-        while(!q.empty()) {
-            int here = q.front();
-            q.pop();
-            visited[here] = 1;
-
-            if(here == k) {
-                flag = false;
-                cout << cnt << "\n";
-                break;
-            }
-
-            if(here - 1 >= 0 && here - 1 < 100004 && !visited[here - 1]) temp_q.push(here - 1);
-            if(here + 1 >= 0 && here + 1 < 100004 && !visited[here + 1]) temp_q.push(here + 1);
-            if(here * 2 >= 0 && here * 2 < 100004 && !visited[here * 2]) temp_q.push(here * 2);
+        if(curr * 2 < MAX && dist[curr * 2] == -1) {
+            dist[curr * 2] = dist[curr] + 1;
+            dq.push_front(curr * 2);
         }
-        if(!flag) break;
-        q = temp_q;
-        cnt++;
+
+        for(int next : {curr - 1, curr + 1}) {
+            if(next >= 0 && next < MAX && dist[next] == -1) {
+                dist[next] = dist[curr] + 1;
+                dq.push_back(next);
+            }
+        }
     }
 
+    cout << dist[k] << "\n";
 
     return 0;
 }
