@@ -8,28 +8,13 @@ int main() {
     cin.tie(NULL);
     cin >> a2 >> a1 >> a0 >> b1 >> b0;
 
-    if(b1 == 0) { // ex) g(x) = 2
-        cout << "Head on\n";
-        exit(0);
-    }
-    else if(b0 == 0) { // ex) g(x) = 2x
-        p2 = b1*b1*a2;
-        p1 = b1*a1;
-        p0 = a0;
-
-        q2 = a2*b1;
-        q1 = a1*b1;
-        q0 = a0*b1;
-    }
-    else { // ex) g(x) = x + 1
-        p2 = a2*b1*b1;
-        p1 = a2*2*b1*b0 + a1*b1;
-        p0 = a2*b0*b0 + a1*b0 + a0;
-        
-        q2 = a2*b1;
-        q1 = a1*b1;
-        q0 = a0*b1 + b0;
-    }
+    p2 = a2*b1*b1;
+    p1 = a2*2*b1*b0 + a1*b1;
+    p0 = a2*b0*b0 + a1*b0 + a0;
+    
+    q2 = a2*b1;
+    q1 = a1*b1;
+    q0 = a0*b1 + b0;
     
     int a, b, c;
     a = p2 - q2;
@@ -42,7 +27,7 @@ int main() {
             else cout << "Head on\n";
         }
         else cout << "Remember my character\n";
-        exit(0);
+        return 0;
     }
     
     int _ret = b*b - 4*a*c;
@@ -55,4 +40,5 @@ int main() {
     else {
         cout << "Head on\n";
     }
+    return 0;
 }
