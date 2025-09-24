@@ -1,8 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
-int l, r, visited[100004], ret;
+typedef long long ll;
+int l, r, visited[100004], dp[100004];
 
-void go(int x) {
+int go(int x) {
+    int &_ret = dp[x];
+    if(_ret != -2) return _ret;
+    if(visited[x] == 1) return _ret = 0;
+    visited[x] = 1;
+
     int xx = x;
     int s = 0, c = 1;
     while(xx / 10 > 0) {
@@ -10,36 +16,28 @@ void go(int x) {
         c *= (xx % 10);
         xx /= 10;
     }
-
     s += xx; c *= xx;
-    int _ret = atoi((to_string(s)+to_string(c)).c_str());
+    int tmp = atoi((to_string(s)+to_string(c)).c_str());
 
-    // cout << x << " " << _ret << "\n";
+    int res;
+    if(x == tmp) res = 1;
+    else if(tmp > 100000) res = -1;
+    else res = go(tmp);
 
-    // 1. f(x) = x -> 1
-    if(x == _ret) {
-        ret += 1;
-    }
-    // 2. x > 100 000 -> -1
-    else if(_ret > 100000) {
-        ret -= 1;
-    }
-    else {
-        if(visited[_ret]) {
-            return;
-        }
-        visited[_ret]++;
-        go(_ret);
-    }
+    visited[x] = 2;
+    return _ret = res;
+
 }
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL); cout.tie(NULL);
     cin >> l >> r;
+    fill(dp, dp+100004, -2);
+
+    ll ret = 0;
     for(int i = l; i <= r; i++) {
-        memset(visited, 0, sizeof(visited));
-        go(i);
+        ret += go(i);
     }
 
     cout << ret << "\n";
