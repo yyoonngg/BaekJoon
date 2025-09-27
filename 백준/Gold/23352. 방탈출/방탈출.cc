@@ -2,7 +2,7 @@
 using namespace std;
 const int dy[] = {-1, 0, 1, 0};
 const int dx[] = {0, 1, 0, -1};
-int n, m, a[54][54], visited[54][54], ret1, ret2;
+int n, m, a[54][54], visited[54][54];
 
 pair<int, int> go(int y, int x) {
     int _ret = visited[y][x];
@@ -36,16 +36,18 @@ int main() {
         }
     }    
 
+    pair<int, int> best = {0, 0};
+
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < m; j++) {
             if(a[i][j] == 0) continue;
             memset(visited, 0, sizeof(visited));
             visited[i][j] = 1;
             pair<int, int> tmp = go(i, j);
-            if(ret1 < tmp.first) ret2 = tmp.second + a[i][j], ret1 = tmp.first;
-            else if(ret1 == tmp.first) ret2 = max(ret2, (tmp.second + a[i][j]));
+            pair<int, int> cand = {tmp.first, tmp.second + a[i][j]};
+            best = max(best, cand);
         }
     }
 
-    cout << ret2 << "\n";
+    cout << best.second << "\n";
 }
