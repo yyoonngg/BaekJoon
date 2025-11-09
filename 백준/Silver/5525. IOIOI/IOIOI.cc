@@ -1,28 +1,34 @@
 #include <bits/stdc++.h>
 using namespace std;
-int n, m, ret;
-string s1, s2;
-
-void ready() {
-    s2 = "I";
-    for(int i = 0; i < n; i++) s2 += "OI";
-}
 
 int main() {
-    cin >> n >> m;
-    cin >> s1;
-    ready();
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    for(int i = 0; i < m; i++) {
-        bool flag = false;
-        for(int j = 0; j < (int)s2.size(); j++) {
-            if(s1[i+j] == s2[j]) flag = true;
-            else { flag = false; break; }
+    int N, M;
+    string S;
+    cin >> N >> M >> S;
+
+    // 길이 len = 2N + 1 (P_N의 길이)
+    int len = 2 * N + 1;
+    int ret = 0;
+
+    // 누적합 배열: IOI 패턴 매칭 여부 누적
+    vector<int> psum(M + 1, 0);
+    for (int i = 1; i < M; i++) {
+        // IOI 중간 패턴이면 psum +1
+        if (S[i-1] == 'I' && S[i] == 'O' && i + 1 < M && S[i+1] == 'I') {
+            psum[i+1] = psum[i-1] + 1;
+        } else {
+            psum[i+1] = 0;
         }
-        if(flag) ret++;
+    }
+
+    // psum[i] == N이면 IOI가 N개 연속된 것
+    for (int i = 0; i <= M; i++) {
+        if (psum[i] >= N) ret++;
     }
 
     cout << ret << "\n";
-    
     return 0;
 }
