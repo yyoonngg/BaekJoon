@@ -4,6 +4,9 @@ typedef long long ll;
 ll n, a[1000004], b, c, ret;
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
     cin >> n;
     for(int i = 0; i < n; i++) cin >> a[i];
     cin >> b >> c;
