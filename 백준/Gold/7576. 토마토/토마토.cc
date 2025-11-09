@@ -2,13 +2,10 @@
 using namespace std;
 const int dy[] = {-1, 0, 1, 0};
 const int dx[] = {0, 1, 0, -1};
-int n, m, a[1004][1004], visited[1004][1004];
+int n, m, a[1004][1004];
 int num0, ret;
-queue<pair<int, int>> q, qq;
+queue<pair<int, int>> q;
 
-void clear_qq() {
-    while(!qq.empty()) qq.pop();
-}
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
@@ -21,28 +18,28 @@ int main() {
         }
     }    
     
-    qq = q;
-    while(!qq.empty()) {
-        q = qq;
-        clear_qq();
-        while(!q.empty()) {
-            pair<int, int> here = q.front(); q.pop();
-            visited[here.first][here.second] = 1;
+    while(!q.empty()) {
+        pair<int, int> here = q.front(); q.pop();
 
-            for(int i = 0; i < 4; i++) {
-                int ny = here.first + dy[i];
-                int nx = here.second + dx[i];
-                if(ny < 0 || nx < 0 || ny >= n || nx >= m) continue;
-                if(visited[ny][nx]) continue;
-                if(a[ny][nx] == -1 || a[ny][nx] == 1) continue;
-                qq.push({ny, nx}); a[ny][nx] = 1;
-                num0--;
-            }
+        for(int i = 0; i < 4; i++) {
+            int ny = here.first + dy[i];
+            int nx = here.second + dx[i];
+            if(ny < 0 || nx < 0 || ny >= n || nx >= m) continue;
+            if (a[ny][nx] != 0) continue;
+            q.push({ny, nx}); 
+            a[ny][nx] = a[here.first][here.second] + 1;
+            num0--;
         }
-        if(!qq.empty()) ret++;
     }
-    if(num0 > 0) ret = -1;
-    cout << ret << "\n";
+    
+    if(num0 > 0) cout << -1 << "\n";
+    else {
+        int max_day = 0;
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+                max_day = max(max_day, a[i][j]);
+        cout << max_day - 1;
+    }
 
     return 0;
 }
