@@ -21,12 +21,7 @@ int main() {
         }
     }
 
-    vector<ll> ret;
-    for(int i = 0; i <= n; i++) {
-        ret.push_back(dp[n-1][i]);
-    }
-    sort(ret.begin(), ret.end());
-    cout << ret[n] << "\n";
+    cout << *max_element(dp[n-1], dp[n-1] + n) << "\n";
 
     return 0;
 }
