@@ -1,33 +1,29 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-int N;
-int S[21][21];
-long long ans = LLONG_MAX;
-
-vector<int> A, B;          // 현재 팀 구성
-long long sumA = 0, sumB = 0; // 각 팀 시너지 합(쌍 합)
+typedef long long ll;
+int n, a[24][24];
+ll ret = LLONG_MAX;
+vector<int> A, B;
+ll sumA, sumB;
 
 void dfs(int i) {
-    if (i == N) {
-        if (!A.empty() && !B.empty()) {
-            ans = min(ans, llabs(sumA - sumB));
+    if(i == n) {
+        if(!A.empty() && !B.empty()) {
+            ret = min(ret, llabs(sumA - sumB));
         }
         return;
     }
 
-    // i를 A팀에 넣기: 기존 A의 모든 j와 쌍 시너지 더함
-    long long addA = 0;
-    for (int j : A) addA += S[i][j] + S[j][i];
+    ll addA = 0;
+    for(int j : A) addA += a[i][j] + a[j][i];
     A.push_back(i);
     sumA += addA;
     dfs(i + 1);
     sumA -= addA;
     A.pop_back();
 
-    // i를 B팀에 넣기
-    long long addB = 0;
-    for (int j : B) addB += S[i][j] + S[j][i];
+    ll addB = 0;
+    for(int j : B) addB += a[i][j] + a[j][i];
     B.push_back(i);
     sumB += addB;
     dfs(i + 1);
@@ -37,17 +33,18 @@ void dfs(int i) {
 
 int main() {
     ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(NULL); cout.tie(NULL);
+    cin >> n;
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            cin >> a[i][j];
+        }
+    }
 
-    cin >> N;
-    for (int i = 0; i < N; ++i)
-        for (int j = 0; j < N; ++j)
-            cin >> S[i][j];
-
-    // 대칭 가지 절반으로 줄이기: 0번을 A팀에 고정
     A.push_back(0);
     dfs(1);
 
-    cout << ans << "\n";
+    cout << ret << "\n";
+
     return 0;
 }
