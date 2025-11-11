@@ -15,7 +15,7 @@ int main() {
         }
         else if(s == "remove") {
             cin >> m;
-            if(ret & (1 << (m-1))) ret = (ret ^ (1 << (m-1)));
+            ret = (ret & ~(1 << (m-1)));
         }
         else if(s == "check") {
             cin >> m;
